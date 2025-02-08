@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Diet Planner 🥗</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>AI Diet Planner 🥗✨</h1>
+        <p>Get your personalized diet plan based on your health goals! 🎯</p>
+
+        <form id="dietForm">
+            <label for="goal">Select Your Goal:</label>
+            <select id="goal" name="goal">
+                <option value="weight_loss">🔥 Weight Loss</option>
+                <option value="muscle_gain">💪 Muscle Gain</option>
+                <option value="balanced">⚖️ Balanced Diet</option>
+                <option value="Heart-Healthy">❤️🫀Heart Healthy Diet</option>
+                <option value="Detox-Diet-Plan">🍵🌿Detox Diet</option>
+                <option value="Ayurveda-Diet-plan">🧘‍♂️🌱Ayurveda Diet</option>
+            </select>
+
+            <button type="submit">Generate Plan </button>
+        </form>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        document.getElementById("dietForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            let goal = document.getElementById("goal").value;
+            
+            fetch("/get_diet", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ goal: goal })
+            })
+            .then(response => response.json())
+            .then(data => {
+                let resultDiv = document.getElementById("result");
+                resultDiv.innerHTML = "<h2>Your Diet Plan 🍽️</h2><ul>" +
+                    data.diet_plan.map(item => `<li>✅ ${item}</li>`).join("") + "</ul>";
+            });
+        });
+    </script>
+</body>
+</html>
